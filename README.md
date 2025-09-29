@@ -1,2 +1,0 @@
-Julian Ortega
-edición
