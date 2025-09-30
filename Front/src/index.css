@@ -1,1 +1,78 @@
 @import "tailwindcss";
+
+/* Poppins Regular */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+/* Poppins Medium */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/Poppins/Poppins-Medium.ttf") format("truetype");
+}
+
+/* Poppins Bold */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/Poppins/Poppins-Bold.ttf") format("truetype");
+}
+
+/* Roboto Regular */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./assets/fonts/Roboto/Roboto-VariableFont_wdth\,wght.ttf") format("truetype");
+}
+
+/* Roboto Medium */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/Roboto/Roboto-Medium.ttf") format("truetype");
+}
+
+/* Roboto Bold */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/Roboto/Roboto-Bold.ttf") format("truetype");
+}
+
+
+@theme {
+  --color-Primary-500: hsl(200, 75%, 45%);   /* Azul salud (confianza) */
+  --color-Primary-700: hsl(200, 80%, 30%);   /* Azul profundo para headers */
+  --color-Secondary-400: hsl(160, 60%, 45%); /* Verde bienestar */
+  --color-Accent-300: hsl(45, 90%, 55%);     /* Amarillo recordatorios */
+  --color-Error-500: hsl(0, 75%, 55%);       /* Rojo accesible para alertas */
+  --color-Success-500: hsl(145, 60%, 40%);   /* Verde éxito */
+  --color-Background: hsl(210, 25%, 98%);    /* Fondo claro */
+  --color-Surface: hsl(0, 0%, 100%);         /* Blanco para tarjetas y modales */
+  --color-Text-Primary: hsl(210, 15%, 20%);  /* Texto principal (gris oscuro) */
+  --color-Text-Secondary: hsl(210, 10%, 40%);/* Texto secundario (gris medio) */
+
+  --font-Poppins: "Poppins";
+  --font-Roboto: "Roboto"
+
+}
+
+body {
+  @apply font-Poppins bg-Primary-500 text-Text-Primary;
+  }
+
