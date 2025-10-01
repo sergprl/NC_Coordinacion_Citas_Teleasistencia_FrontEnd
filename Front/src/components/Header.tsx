@@ -26,9 +26,9 @@ const Header: React.FC = () => {
       <div className="flex items-center md:hidden">
         <button id="mobile-menu" className="p-2 rounded-md border border-gray-300">
           <span className="sr-only">MENU</span>
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2"
               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round"
+            <path strokeLinecap="round" strokeLinejoin="round"
                   d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
@@ -41,9 +41,9 @@ const Header: React.FC = () => {
           <button className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
             <span>Buscar</span>
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd"
+              <path fillRule="evenodd"
                     d="M5.23 7.21a.75.75 0 011.06.02L10 11.186l3.71-3.956a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z"
-                    clip-rule="evenodd" />
+                    clipRule="evenodd" />
             </svg>
           </button>
           <ul className="absolute hidden group-hover:block bg-white border shadow-md rounded-md mt-2 w-48">
@@ -60,9 +60,9 @@ const Header: React.FC = () => {
               <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zM12 14c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
             </svg>
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd"
+              <path fillRule="evenodd"
                     d="M5.23 7.21a.75.75 0 011.06.02L10 11.186l3.71-3.956a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z"
-                    clip-rule="evenodd" />
+                    clipRule="evenodd" />
             </svg>
           </button>
           <ul className="absolute hidden group-hover:block right-0 bg-white border shadow-md rounded-md mt-2 w-40">
