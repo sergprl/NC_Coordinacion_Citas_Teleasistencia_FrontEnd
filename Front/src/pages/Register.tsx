@@ -60,7 +60,7 @@ const Register: React.FC = () => {
         userType: 'patient'
       };
 
-      await register(formData.email, formData.password, userData);
+    //   await register(formData.email, formData.password, userData);
       navigate('/dashboard');
     } catch (err: any) {
       setError('Error al crear la cuenta. El correo puede estar ya registrado.');
