@@ -1,7 +1,7 @@
 // src/pages/DoctorSearch.tsx
 import React, { useState } from 'react';
 import { mockDoctors, mockSpecialties } from '../utils/mockData';
-import { Doctor } from '../types';
+import type { Doctor } from '../types';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 
