@@ -3,26 +3,27 @@ import React from "react";
 const Header: React.FC = () => {
   return (
     <header className="w-full flex items-center justify-between px-4 py-3 shadow-sm bg-white">
-      {/* <!-- Logo --> */}
+      {/* Logo */}
       <div className="flex-shrink-0">
         <a href="/" className="inline-block">
           <span className="sr-only">doctoranytime</span>
           <img 
-  src="/images/logo-rebranding.svg" 
-  alt="doctoranytime logo" 
-  className="w-[79px] h-[32px]" 
-/>
-
+            src="/images/logo-rebranding.svg" 
+            alt="doctoranytime logo" 
+            className="w-[79px] h-[32px]" 
+          />
         </a>
       </div>
 
-      {/* <!-- CTA principal --> */}
-      <a href="https://pro.doctoranytime.co/es/joinus/unete-a-nosotros"
-        className="ml-4 mr-auto px-4 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition">
+      {/* CTA principal */}
+      <a 
+        href="https://pro.doctoranytime.co/es/joinus/unete-a-nosotros"
+        className="ml-4 mr-auto px-4 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition"
+      >
         ¿Eres especialista?
       </a>
 
-      {/* <!-- Menú móvil --> */}
+      {/* Menú móvil */}
       <div className="flex items-center md:hidden">
         <button id="mobile-menu" className="p-2 rounded-md border border-gray-300">
           <span className="sr-only">MENU</span>
@@ -34,45 +35,72 @@ const Header: React.FC = () => {
         </button>
       </div>
 
-      {/* <!-- Menú desktop --> */}
+      {/* Menú desktop */}
       <nav className="hidden md:flex items-center space-x-6">
-        {/* <!-- Dropdown Buscar --> */}
+        {/* Dropdown Buscar */}
         <div className="relative group">
-          <button className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
+          <button className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 px-3 py-2">
             <span>Buscar</span>
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd"
                     d="M5.23 7.21a.75.75 0 011.06.02L10 11.186l3.71-3.956a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z"
                     clipRule="evenodd" />
             </svg>
           </button>
-          <ul className="absolute hidden group-hover:block bg-white border shadow-md rounded-md mt-2 w-48">
-            <li><a href="/s/medico-general" className="block px-4 py-2 hover:bg-gray-50">Médicos</a></li>
-            <li><a href="/preguntas-respuestas" className="block px-4 py-2 hover:bg-gray-50">Pregunta a nuestros especialistas</a></li>
-            <li><a href="/articulos-medicos" className="block px-4 py-2 hover:bg-gray-50">Artículos de Salud</a></li>
-          </ul>
+          
+          {/* Dropdown menu - Ahora parte del mismo contenedor */}
+          <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <ul className="bg-white border shadow-lg rounded-md w-56">
+              <li>
+                <a href="/s/medico-general" className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                  Médicos
+                </a>
+              </li>
+              <li>
+                <a href="/preguntas-respuestas" className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                  Pregunta a nuestros especialistas
+                </a>
+              </li>
+              <li>
+                <a href="/articulos-medicos" className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                  Artículos de Salud
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        {/* <!-- Dropdown Login --> */}
+        {/* Dropdown Login */}
         <div className="relative group">
-          <button className="flex items-center space-x-1 px-3 py-2 border border-gray-300 rounded-md text-gray-700 hover:text-blue-600">
+          <button className="flex items-center space-x-1 px-3 py-2 border border-gray-300 rounded-md text-gray-700 hover:text-blue-600 hover:border-blue-600 transition-colors">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zM12 14c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
             </svg>
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd"
                     d="M5.23 7.21a.75.75 0 011.06.02L10 11.186l3.71-3.956a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z"
                     clipRule="evenodd" />
             </svg>
           </button>
-          <ul className="absolute hidden group-hover:block right-0 bg-white border shadow-md rounded-md mt-2 w-40">
-            <li><a href="/account/login" className="block px-4 py-2 hover:bg-gray-50">Paciente</a></li>
-            <li><a href="/account/login?loginType=1" className="block px-4 py-2 hover:bg-gray-50">Médico</a></li>
-          </ul>
+          
+          {/* Dropdown menu - Ahora parte del mismo contenedor */}
+          <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <ul className="bg-white border shadow-lg rounded-md w-40">
+              <li>
+                <a href="/account/login" className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                  Paciente
+                </a>
+              </li>
+              <li>
+                <a href="/account/login?loginType=1" className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                  Médico
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </header>
-
   );
 };
 
