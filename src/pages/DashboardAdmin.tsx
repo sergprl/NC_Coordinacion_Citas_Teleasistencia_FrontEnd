@@ -1,4 +1,10 @@
 import React, { useState, useMemo } from 'react';
+import Modal from '../components/common/Modal';
+import Button from '../components/common/Button';
+import Card from '../components/common/Card';
+import MedicoForm, { type MedicoFormData } from '../components/forms/MedicoForm';
+import PacienteForm, { type PacienteFormData } from '../components/forms/PacienteForm';
+import CitaForm, { type CitaFormData } from '../components/forms/CitaForm';
 
 // Tipos
 interface Appointment {
@@ -81,30 +87,22 @@ const mockAppointments: Appointment[] = [
     type: 'virtual',
     status: 'cancelada',
     reason: 'Terapia'
-  },
-  {
-    id: '6',
-    patientName: 'Lucía Fernández',
-    patientAge: 41,
-    patientGender: 'female',
-    doctorName: 'Dr. Miguel Ángel',
-    specialty: 'Nutrición',
-    date: '2025-10-08',
-    time: '10:30',
-    type: 'presencial',
-    status: 'pendiente',
-    reason: 'Plan alimenticio'
   }
 ];
 
+type TabType = 'appointments' | 'medicos' | 'pacientes' | 'citas';
+
 const AdminDashboard: React.FC = () => {
-  const [appointments] = useState<Appointment[]>(mockAppointments);
+  const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
+  const [activeTab, setActiveTab] = useState<TabType>('appointments');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [genderFilter, setGenderFilter] = useState<string>('all');
   const [ageFilter, setAgeFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
 
   // Estadísticas
   const stats = useMemo(() => ({
@@ -158,6 +156,43 @@ const AdminDashboard: React.FC = () => {
     return icons[status as keyof typeof icons] || '';
   };
 
+  // Handlers para formularios
+  const handleMedicoSubmit = async (data: MedicoFormData) => {
+    setFormLoading(true);
+    try {
+      // Simulación de API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Médico guardado:', data);
+      setIsModalOpen(false);
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handlePacienteSubmit = async (data: PacienteFormData) => {
+    setFormLoading(true);
+    try {
+      // Simulación de API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Paciente guardado:', data);
+      setIsModalOpen(false);
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleCitaSubmit = async (data: CitaFormData) => {
+    setFormLoading(true);
+    try {
+      // Simulación de API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Cita guardada:', data);
+      setIsModalOpen(false);
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Header */}
@@ -166,199 +201,299 @@ const AdminDashboard: React.FC = () => {
           Panel Administrativo
         </h1>
         <p className="text-gray-600">
-          Gestión y monitoreo de citas médicas
+          Gestión integral de citas médicas, médicos y pacientes
         </p>
       </div>
 
-      {/* Estadísticas */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-          <div className="text-sm text-gray-600">Total Citas</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-2xl font-bold text-yellow-600">{stats.pendientes}</div>
-          <div className="text-sm text-gray-600">Pendientes</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-2xl font-bold text-blue-600">{stats.confirmadas}</div>
-          <div className="text-sm text-gray-600">Confirmadas</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-2xl font-bold text-green-600">{stats.completadas}</div>
-          <div className="text-sm text-gray-600">Completadas</div>
-        </div>
+      {/* Tabs de navegación */}
+      <div className="mb-6 flex gap-2 border-b border-gray-200">
+        {[
+          { key: 'appointments', label: '📅 Citas', icon: '📅' },
+          { key: 'medicos', label: '👨‍⚕️ Médicos', icon: '👨‍⚕️' },
+          { key: 'pacientes', label: '👥 Pacientes', icon: '👥' },
+          { key: 'citas', label: '📋 Crear Cita', icon: '📋' }
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key as TabType)}
+            className={`px-6 py-3 font-medium transition-all ${
+              activeTab === tab.key
+                ? 'text-Primary-500 border-b-2 border-Primary-500'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* Filtros y búsqueda */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-          {/* Búsqueda */}
-          <div className="lg:col-span-2">
-            <input
-              type="text"
-              placeholder="Buscar paciente, médico..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      {/* Contenido por tab */}
+
+      {/* TAB: CITAS */}
+      {activeTab === 'appointments' && (
+        <div>
+          {/* Estadísticas */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+              <div className="text-sm text-gray-600">Total Citas</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="text-2xl font-bold text-yellow-600">{stats.pendientes}</div>
+              <div className="text-sm text-gray-600">Pendientes</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="text-2xl font-bold text-blue-600">{stats.confirmadas}</div>
+              <div className="text-sm text-gray-600">Confirmadas</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="text-2xl font-bold text-green-600">{stats.completadas}</div>
+              <div className="text-sm text-gray-600">Completadas</div>
+            </div>
+          </div>
+
+          {/* Filtros y búsqueda */}
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+              <div className="lg:col-span-2">
+                <input
+                  type="text"
+                  placeholder="Buscar paciente, médico..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">Todos los estados</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="completada">Completada</option>
+                <option value="cancelada">Cancelada</option>
+              </select>
+
+              <select
+                value={genderFilter}
+                onChange={(e) => setGenderFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">Todos los sexos</option>
+                <option value="male">Masculino</option>
+                <option value="female">Femenino</option>
+              </select>
+
+              <select
+                value={ageFilter}
+                onChange={(e) => setAgeFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">Todas las edades</option>
+                <option value="young">&lt; 30 años</option>
+                <option value="adult">30-59 años</option>
+                <option value="senior">≥ 60 años</option>
+              </select>
+
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">Todos los tipos</option>
+                <option value="virtual">Virtual</option>
+                <option value="presencial">Presencial</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Tabla de citas */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+            <div className="p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Citas ({filteredAppointments.length})
+              </h2>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Paciente
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Edad
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Médico
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Especialidad
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Fecha/Hora
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Tipo
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Estado
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredAppointments.map((apt) => (
+                    <tr key={apt.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                        {apt.patientName}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600">
+                        {apt.patientAge}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-900">
+                        {apt.doctorName}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600">
+                        {apt.specialty}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600">
+                        <div>{new Date(apt.date).toLocaleDateString('es-ES')}</div>
+                        <div className="text-xs text-gray-500">{apt.time}</div>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          apt.type === 'virtual' 
+                            ? 'bg-purple-100 text-purple-800' 
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {apt.type === 'virtual' ? '💻 Virtual' : '🏥 Presencial'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusStyles(apt.status)}`}>
+                          {getStatusIcon(apt.status)} {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <button
+                          onClick={() => setSelectedAppointment(apt)}
+                          className="text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          Ver
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {filteredAppointments.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-4xl mb-4">🔍</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  No se encontraron citas
+                </h3>
+                <p className="text-gray-600">
+                  Intenta ajustar los filtros de búsqueda
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB: MÉDICOS */}
+      {activeTab === 'medicos' && (
+        <div>
+          <div className="mb-6">
+            <Button onClick={() => setIsModalOpen(true)}>
+              + Agregar Médico
+            </Button>
+          </div>
+
+          <Card>
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">👨‍⚕️</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Gestión de Médicos
+              </h3>
+              <p className="text-gray-600">
+                Haz clic en "Agregar Médico" para crear un nuevo registro
+              </p>
+            </div>
+          </Card>
+
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title="Crear Nuevo Médico"
+            size="lg"
+          >
+            <MedicoForm
+              onSubmit={handleMedicoSubmit}
+              isLoading={formLoading}
             />
+          </Modal>
+        </div>
+      )}
+
+      {/* TAB: PACIENTES */}
+      {activeTab === 'pacientes' && (
+        <div>
+          <div className="mb-6">
+            <Button onClick={() => setIsModalOpen(true)}>
+              + Agregar Paciente
+            </Button>
           </div>
 
-          {/* Filtro Estado */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="all">Todos los estados</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="confirmada">Confirmada</option>
-            <option value="completada">Completada</option>
-            <option value="cancelada">Cancelada</option>
-          </select>
+          <Card>
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">👥</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Gestión de Pacientes
+              </h3>
+              <p className="text-gray-600">
+                Haz clic en "Agregar Paciente" para crear un nuevo registro
+              </p>
+            </div>
+          </Card>
 
-          {/* Filtro Sexo */}
-          <select
-            value={genderFilter}
-            onChange={(e) => setGenderFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title="Crear Nuevo Paciente"
+            size="lg"
           >
-            <option value="all">Todos los sexos</option>
-            <option value="male">Masculino</option>
-            <option value="female">Femenino</option>
-          </select>
-
-          {/* Filtro Edad */}
-          <select
-            value={ageFilter}
-            onChange={(e) => setAgeFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="all">Todas las edades</option>
-            <option value="young">&lt; 30 años</option>
-            <option value="adult">30-59 años</option>
-            <option value="senior">≥ 60 años</option>
-          </select>
-
-          {/* Filtro Tipo */}
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="all">Todos los tipos</option>
-            <option value="virtual">Virtual</option>
-            <option value="presencial">Presencial</option>
-          </select>
+            <PacienteForm
+              onSubmit={handlePacienteSubmit}
+              isLoading={formLoading}
+            />
+          </Modal>
         </div>
-      </div>
+      )}
 
-      {/* Resultados */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Citas ({filteredAppointments.length})
+      {/* TAB: CREAR CITA */}
+      {activeTab === 'citas' && (
+        <Card>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Crear Nueva Cita
           </h2>
-        </div>
+          <CitaForm
+            onSubmit={handleCitaSubmit}
+            isLoading={formLoading}
+          />
+        </Card>
+      )}
 
-        {/* Tabla de citas */}
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Paciente
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Edad
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Sexo
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Médico
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Especialidad
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Fecha/Hora
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Tipo
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Estado
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredAppointments.map((apt) => (
-                <tr key={apt.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                    {apt.patientName}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    {apt.patientAge}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    {apt.patientGender === 'male' ? '♂' : '♀'}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-900">
-                    {apt.doctorName}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    {apt.specialty}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    <div>{new Date(apt.date).toLocaleDateString('es-ES')}</div>
-                    <div className="text-xs text-gray-500">{apt.time}</div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      apt.type === 'virtual' 
-                        ? 'bg-purple-100 text-purple-800' 
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {apt.type === 'virtual' ? '💻 Virtual' : '🏥 Presencial'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusStyles(apt.status)}`}>
-                      {getStatusIcon(apt.status)} {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <button
-                      onClick={() => setSelectedAppointment(apt)}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {filteredAppointments.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-4xl mb-4">🔍</div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No se encontraron citas
-            </h3>
-            <p className="text-gray-600">
-              Intenta ajustar los filtros de búsqueda
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Modal de detalle */}
+      {/* Modal de detalle de cita */}
       {selectedAppointment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
